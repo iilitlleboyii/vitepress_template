@@ -295,6 +295,9 @@ export default defineConfig({
 
 每个导航菜单项都可以配置对应的侧边栏，您只需要配置好相应的文档路径。侧边栏的键名与导航菜单的 `activeMatch` 属性值对应，用于导航菜单项高亮。
 
+<details>
+<summary>点击显示/折叠代码</summary>
+
 ```js
 import { defineConfig } from "vitepress"
 
@@ -348,6 +351,8 @@ export default defineConfig({
   },
 })
 ```
+
+</details>
 
 #### 大纲
 
@@ -411,13 +416,13 @@ VitePress 会将以下 npm 脚本注入到 package.json 中，您可以使用这
 
 ```json
 {
-    ...
-    "scripts": {
-        "docs:dev": "vitepress dev docs",
-        "docs:build": "vitepress build docs",
-        "docs:preview": "vitepress preview docs"
-    },
-    ...
+  // ...
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  }
+  // ...
 }
 ```
 
@@ -465,4 +470,193 @@ $ bunx vitepress dev docs
 
 ::: tip 提示
 迫不及待地想尝试？更多内容请访问[VitePress 官网](https://vitepress.dev/)。
+:::
+
+## 部署
+
+站点编辑完成后，您可以使用以下命令进行构建：
+
+::: code-group
+
+```sh [npm]
+$ npm run docs:build
+```
+
+```sh [pnpm]
+$ pnpm run docs:build
+```
+
+:::
+
+构建完成后会在 `.vitepress` 目录下生成 `dist` 文件夹，您可以将其部署到服务器上。这里以 Windows 下的 Nginx 为例，假设您的项目根路径为 `dist` 目录，目前里面存放的是 Vue 项目资源，可以将刚才构建好的 `dist` 文件夹复制到根目录下，然后重命名为 `docs`，再修改 `nginx.conf` 配置文件如下：
+
+```nginx {12-16}
+# ...
+
+server {
+    # ...
+
+    location / {
+        root dist;
+        index index.html index.htm;
+        try_files $uri $uri/ @router;
+    }
+
+    location /docs { // [!code focus:5]
+        root dist;
+        index index.html index.htm;
+        try_files $uri $uri/ /docs/index.html;
+    }
+
+    location @router {
+        rewrite (static/.*)$ /$1 redirect;
+        rewrite ^.*$ /index.html last;
+    }
+
+    location /prod-api/ {
+        proxy_pass http://127.0.0.1:8000/;
+    }
+
+    location /version.json {
+        root dist;
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'Origin, X-Requested-With, Content-Type, Accept, Authorization';
+        if ($request_method = 'OPTIONS') {
+            return 204;
+        }
+        try_files $uri =404;
+    }
+
+    # ...
+}
+
+# ...
+```
+
+配置完 Nginx 后，您可以使用[WinSW](https://github.com/winsw/winsw/releases)工具设置 Nginx 开机自启动。
+
+1. 下载 WinSW 安装包，复制到 Nginx 应用目录下，并重命名为 `nginx-service.exe`
+   ![下载 WinSW](/images/8nvCFu0XlR.png)
+2. 新建 `server-logs` 文件夹，用于存储日志文件
+3. 新建 `nginx-service.xml` 文件，内容如下，具体路径根据您的实际情况来改：
+   ```xml
+   <!-- nginx-service.xml -->
+   <service>
+    <id>nginx</id>
+    <name>nginx</name>
+    <description>nginx</description>
+    <logpath>C:\nginx-1.24.0\server-logs\</logpath>
+    <logmode>roll</logmode>
+    <depend></depend>
+    <executable>C:\nginx-1.24.0\nginx.exe</executable>
+    <stopexecutable>C:\nginx-1.24.0\nginx.exe -s stop</stopexecutable>
+   </service>
+   ```
+   ![下载 WinSW](/images/On6UEQFDlQ.png)
+4. 打开终端，切换到 Nginx 应用目录，执行 `.\nginx-service.exe install` 安装服务
+5. 打开 Windows 服务，找到 nginx 服务设置启动方式为自动并启动
+
+## 添加组件示例
+
+### 安装插件
+
+这里我们需要安装 Vue 组件示例插件[vitepress-theme-demoblock](https://github.com/xinlei3166/vitepress-theme-demoblock)
+
+::: code-group
+
+```sh [npm]
+$ npm install -D vitepress-theme-demoblock
+```
+
+```sh [pnpm]
+$ pnpm add -D vitepress-theme-demoblock
+```
+
+```sh [yarn]
+$ yarn add -D vitepress-theme-demoblock
+```
+
+:::
+
+### 配置
+
+在 `.vitepress/config.mjs` 中添加如下配置：
+
+```js
+import { demoblockPlugin, demoblockVitePlugin } from "vitepress-theme-demoblock"
+
+export default defineConfig({
+  markdown: {
+    config: (md) => {
+      md.use(demoblockPlugin)
+    },
+  },
+  vite: {
+    plugins: [demoblockVitePlugin()],
+  },
+
+  // ...
+})
+```
+
+在 `.vitepress/theme/index.js` 中添加如下配置：
+
+```js
+import DefaultTheme from "vitepress/theme"
+import "vitepress-theme-demoblock/dist/theme/styles/index.css"
+import { useComponents } from "./useComponents"
+
+export default {
+  ...DefaultTheme,
+  enhanceApp(ctx) {
+    DefaultTheme.enhanceApp(ctx)
+    useComponents(ctx.app)
+  },
+}
+```
+
+在 `package.json` 中添加如下命令，`vitepress-rc` 用来注册组件（ `--docsDir` 指定 docs 目录，`--componentsDir` 指定组件注册目录，如果 .vitepress 目录和 package.json 同级，--docsDir 设置为 `.` ）。
+
+```json
+{
+  // ...
+  "scripts": {
+    // ...
+    "register:components": "vitepress-rc"
+  }
+  // ...
+}
+```
+
+在启动或构建前，先执行 `npm run register:components` 命令，会自动将 `.vitepress/components` 目录下的组件注册到 `.vitepress/theme/useComponents.js` 中。当然，您也可以手动将该命令添加到其它命令中一并执行，这样更方便。
+
+:::demo
+
+```vue
+<template>
+  <demo-button></demo-button>
+  <el-row class="mb-4">
+    <el-button>Default</el-button>
+    <el-button type="primary">Primary</el-button>
+    <el-button type="success" @click="open('success')">Success</el-button>
+    <el-button type="info">Info</el-button>
+    <el-button type="warning">Warning</el-button>
+    <el-button type="danger">Danger</el-button>
+  </el-row>
+</template>
+
+<script setup>
+import { ref } from "vue"
+import { ElMessage } from "element-plus"
+
+const open = () => {
+  ElMessage({
+    message: "Congrats, this is a success message.",
+    type: "success",
+  })
+}
+</script>
+```
+
 :::

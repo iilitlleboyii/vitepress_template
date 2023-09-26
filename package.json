@@ -5,14 +5,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "vitepress dev docs",
-    "build": "vitepress build docs",
-    "preview": "vitepress preview docs"
+    "dev": "pnpm run register:components && vitepress dev docs",
+    "build": "pnpm run register:components && vitepress build docs",
+    "preview": "vitepress preview docs",
+    "register:components": "vitepress-rc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "vitepress": "1.0.0-rc.13"
+    "vitepress": "1.0.0-rc.13",
+    "vitepress-theme-demoblock": "^3.0.3"
+  },
+  "dependencies": {
+    "element-plus": "^2.3.14"
   }
 }

@@ -1,7 +1,19 @@
 import { defineConfig } from "vitepress"
+import { demoblockPlugin, demoblockVitePlugin } from "vitepress-theme-demoblock"
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  markdown: {
+    config: (md) => {
+      md.use(demoblockPlugin)
+    },
+  },
+  vite: {
+    plugins: [demoblockVitePlugin()],
+    build: {
+      chunkSizeWarningLimit: 2000,
+    },
+  },
   base: "/docs/",
   title: "VitePress入门教程",
   titleTemplate: "VitePress模板",
@@ -156,7 +168,7 @@ export default defineConfig({
     },
     footer: {
       message: "Released under the MIT License.",
-      copyright: "Copyright © 2019-present Arcuchi Co.,Ltd.",
+      copyright: "Copyright © 2019-present Arcuchi Co., Ltd.",
     },
   },
 })
