@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: VitePress入门教程
-  text: 你好，年轻人
+  text: 加油，年轻人
   tagline: 不积跬步，无以至千里
   image:
     src: /LOGO.png
