@@ -1,0 +1,29 @@
+summary {
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+}
+
+summary:hover {
+  color: var(--vp-c-brand-1);
+}
+
+.VPNavBar {
+  border-bottom-color: var(--vp-c-gutter) !important;
+}
+
+.content-body {
+  transition: background-color 0s !important;
+  background-image: radial-gradient(transparent 1px, var(--vp-c-bg) 1px);
+  background-size: 4px 4px;
+  backdrop-filter: saturate(50%) blur(4px);
+  -webkit-backdrop-filter: saturate(50%) blur(4px);
+}
+
+.VPNavBar:not(.has-sidebar):not(.top) {
+  background-color: transparent !important;
+}
+
+.VPNavBar:not(.top) .content-body {
+  background-color: transparent !important;
+}
