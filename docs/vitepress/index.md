@@ -651,6 +651,10 @@ export default {
 
 在启动或构建前，先执行 `npm run register:components` 命令，会自动将 `.vitepress/components` 目录下的组件注册到 `.vitepress/theme/useComponents.js` 中。当然，您也可以手动将该命令添加到其它命令中一并执行，这样更方便。
 
+### 使用
+
+使用 Markdown 扩展语法 `:::demo` (注意这里 demo 前没有空格) 和 `:::` 包裹代码块，即可渲染为组件示例。
+
 :::demo
 
 ```vue
