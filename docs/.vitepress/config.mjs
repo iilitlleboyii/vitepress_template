@@ -28,9 +28,9 @@ export default defineConfig({
     },
     nav: [
       { text: "🎈VitePress入门教程", link: "/vitepress/", activeMatch: "/vitepress/" },
-      { text: "⚡最新", link: "/guide/", activeMatch: "/guide/" },
+      { text: "⚡Vue项目搭建教程", link: "/guide/", activeMatch: "/guide/" },
+      { text: "🚩Vue优化", link: "/vue/", activeMatch: "/vue/" },
       { text: "🔥最热", link: "/config/", activeMatch: "/config/" },
-      { text: "🚩Vue", link: "/vue/", activeMatch: "/vue/" },
       {
         text: "🎲分类",
         activeMatch: "/category/",
@@ -99,11 +99,11 @@ export default defineConfig({
     sidebar: {
       "/guide/": [
         {
-          text: "Guide",
+          text: "Vue后台管理项目从零搭建",
           items: [
-            { text: "Index", link: "/guide/" },
-            { text: "One", link: "/guide/one" },
-            { text: "Two", link: "/guide/two" },
+            { text: "引言", link: "/guide/" },
+            { text: "安装Vue3", link: "/guide/one" },
+            { text: "项目配置", link: "/guide/two" },
           ],
         },
       ],
