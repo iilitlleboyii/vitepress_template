@@ -14,7 +14,8 @@ $ pnpm i eslint -D
 $ pnpm create @eslint/config
 ```
 
-根据项目需要，完成问题选择
+根据项目需要，完成问题选择:
+![eslint 配置](/images/UG0OQattZ9.png)
 
 ```js [.eslintrc.js]
 module.exports = {
@@ -153,13 +154,30 @@ module.exports = {
 $ npx husky add .husky/commit-msg
 ```
 
+在 `.husky/commit-msg` 文件中添加如下内容:
+
+```md
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/\_/husky.sh"
+
+pnpm run commitlint
+```
+
 ## 统一使用 pnpm 包管理工具
 
-团队协作时有必要统一包管理工具，在根目录新建 `scripts/preinstall.js` 文件，添加如下内容:
+1. 团队协作时有必要统一包管理工具，在根目录新建 `scripts/preinstall.js` 文件，添加如下内容:
 
 ```js
 if (!/pnpm/.test(process.env.npm_execpath || "")) {
   console.warn(`\u001b[33mThis repository must using pnpm as the package manager ` + ` for scripts to work properly.\u001b[39m\n`)
   process.exit(1)
+}
+```
+
+2. 修改 **package.json**
+
+```json
+"scripts": {
+    "preinstall": "node ./scripts/preinstall.js"
 }
 ```
