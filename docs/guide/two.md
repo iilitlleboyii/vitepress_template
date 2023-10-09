@@ -160,7 +160,7 @@ $ npx husky add .husky/commit-msg
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/\_/husky.sh"
 
-pnpm run commitlint
+pnpm commitlint
 ```
 
 ## 统一使用 pnpm 包管理工具

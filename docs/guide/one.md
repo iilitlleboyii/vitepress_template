@@ -2,7 +2,7 @@
 
 新建项目文件夹 **admin-demo**，从此处打开终端，输入一下命令：
 
-1. 全局安装包管理工具 **pnpm** 
+1. 全局安装包管理工具 **pnpm**
 
 ```sh
 $ npm install -g pnpm
@@ -26,7 +26,8 @@ $ create-vue
 4. 安装依赖
 
 ```sh
-$ cd web && pnpm install
+$ cd web
+$ pnpm install
 ```
 
 5. 启动项目
