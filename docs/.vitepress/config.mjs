@@ -31,6 +31,7 @@ export default defineConfig({
       { text: '⚡Vue项目搭建教程', link: '/guide/', activeMatch: '/guide/' },
       { text: '🚩Vue优化', link: '/vue/', activeMatch: '/vue/' },
       { text: '🔥实践工具', link: '/sundry/tools/', activeMatch: '/sundry/tolls/' },
+      { text: '🎉Django', link: '/django/', activeMatch: '/django/' },
       {
         text: '🚀外链',
         link: 'https://www.baidu.com',
@@ -68,6 +69,18 @@ export default defineConfig({
                   link: '/sundry/tools/async-validator'
                 }
               ]
+            }
+          ]
+        }
+      ],
+      '/django/': [
+        {
+          text: 'Django',
+          items: [
+            { text: '引言', link: '/django/' },
+            {
+              text: '创建APP',
+              link: '/django/one'
             }
           ]
         }
